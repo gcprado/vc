@@ -527,7 +527,7 @@ def main():
     """Función principal para ejecutar el detector de monedas"""
     
     # Cargar imagen
-    image_path = 'assets/centimos.jpeg'
+    image_path = 'assets/Monedas.jpg'
     
     print("="*60)
     print("SISTEMA DE DETECCIÓN Y VALORACIÓN DE MONEDAS")
@@ -541,7 +541,7 @@ def main():
     # Detectar monedas con método avanzado
     print("\n[1] Detectando monedas")
     num_coins = detector.detect_coins(
-        method='hough',
+        method='contours_advanced',
         min_area=200,
         min_circularity=0.55,
         min_solidity=0.6
