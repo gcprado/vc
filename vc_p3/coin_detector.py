@@ -117,12 +117,12 @@ class CoinDetector:
         gray = cv2.cvtColor(self.img, cv2.COLOR_BGR2GRAY)
         
         if method == 'contours_advanced':
-            # Método avanzado con mejor preprocesado (recomendado)
+            # Método avanzado con mejor preprocesado
             # CLAHE para uniformar iluminación
             clahe = cv2.createCLAHE(clipLimit=3.0, tileGridSize=(8,8))
             gray_cl = clahe.apply(gray)
             
-            # Filtro bilateral: reduce ruido manteniendo bordes
+            # Filtro bilateral: mantiene bordes
             bilateral = cv2.bilateralFilter(gray_cl, d=9, sigmaColor=75, sigmaSpace=75)
             
             # Desenfoque gaussiano suave
@@ -527,7 +527,7 @@ def main():
     """Función principal para ejecutar el detector de monedas"""
     
     # Cargar imagen
-    image_path = 'assets/Img4.jpeg'
+    image_path = 'assets/centimos.jpeg'
     
     print("="*60)
     print("SISTEMA DE DETECCIÓN Y VALORACIÓN DE MONEDAS")
@@ -541,7 +541,7 @@ def main():
     # Detectar monedas con método avanzado
     print("\n[1] Detectando monedas")
     num_coins = detector.detect_coins(
-        method='contours',
+        method='hough',
         min_area=200,
         min_circularity=0.55,
         min_solidity=0.6
