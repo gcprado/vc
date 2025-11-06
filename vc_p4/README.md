@@ -1,2 +1,2 @@
 video used for testing: https://drive.google.com/file/d/1aY4ROz7G3PcyhdQZp1BRLN6NohsX8mlF/view?usp=sharing
-video with labels: pending...
+video with labels: https://drive.google.com/file/d/1Dq_CaNwxfpyMGIyga36OlxNeadNXorfp/view?usp=sharing
