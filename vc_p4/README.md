@@ -143,7 +143,7 @@ Se evaluaron dos métodos de reconocimiento de texto:
   
 ---
 
-## 👨‍💻 Autor
+### 👨‍💻 Autor
 
 **Giancarlo Prado Abreu**  
 - Práctica 4 de la asignatura Visión por Computador
