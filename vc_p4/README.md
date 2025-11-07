@@ -132,6 +132,8 @@ Se evaluaron dos métodos de reconocimiento de texto:
    PaddleOCR: 90.00% promedio de similitud
    EasyOCR:   58.05% promedio de similitud
 
+**Datos de evaluacion de OCR:** [Descargar desde Google Drive](https://drive.google.com/file/d/13HLXpTfed3lPHB0SREQOlc_tWg9aLSD7/view?usp=sharing)
+
 **Conclusiones OCR:**
 - PaddleOCR mostró mejor rendimiento frente a matrículas borrosas, sucias o inclinadas.  
 - EasyOCR fue más rápido, ideal para aplicaciones en tiempo real.  
