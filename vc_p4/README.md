@@ -13,7 +13,7 @@ Este proyecto desarrolla un sistema de visión por computadora capaz de:
 
 ---
 
-## Entrenamiento del Modelo
+### Entrenamiento del Modelo
 
 Se utilizó un modelo base **YOLOv11-Large** preentrenado, adaptado a un conjunto de datos específico de matrículas.  
 El entrenamiento se realizó durante 150 épocas con imágenes de 640×640 píxeles, aplicando *early stopping* para evitar sobreajuste.
@@ -40,7 +40,7 @@ El conjunto de datos utilizado para entrenar el modelo YOLOv11 fue preparado sig
 
 ---
 
-## Resultados del Entrenamiento
+### Resultados del Entrenamiento
 
 Durante el proceso de entrenamiento se generaron diversas gráficas que permiten analizar el rendimiento del modelo. Todas se encuentran en: `matriculas_model/version_1/`
 
@@ -70,7 +70,7 @@ A continuación se muestran ejemplos del conjunto de entrenamiento y validación
 
 ---
 
-## Evaluación del Modelo
+### Evaluación del Modelo
 
 La validación se llevó a cabo sobre el conjunto de prueba (split *test*) definido en `data.yaml`.
 
@@ -82,7 +82,7 @@ La validación se llevó a cabo sobre el conjunto de prueba (split *test*) defin
 
 ---
 
-## Procesamiento del Vídeo
+### Procesamiento del Vídeo
 
 El sistema fue probado sobre un vídeo de ejemplo, realizando las siguientes tareas:
 
@@ -94,7 +94,7 @@ El sistema fue probado sobre un vídeo de ejemplo, realizando las siguientes tar
 
 ---
 
-## Resultados
+### Resultados
 
 - **Vídeo original:** [C0142.MP4](https://drive.google.com/file/d/1aY4ROz7G3PcyhdQZp1BRLN6NohsX8mlF/view?usp=sharing)  
 - **Vídeo procesado (resultados):** [detecciones_y_ocr.mp4](https://drive.google.com/file/d/1Dq_CaNwxfpyMGIyga36OlxNeadNXorfp/view?usp=sharing)
@@ -114,23 +114,16 @@ Este filtrado permite obtener un listado limpio y preciso de las matrículas det
 
 ---
 
-## Comparativa de OCR (FALTA POR TERMINAR)
+### Comparativa de OCR
 
 Se evaluaron dos métodos de reconocimiento de texto:
 
-🔹 Total de muestras: 26
-──────────────────────────────────────────────
-🔸 Exact Match:
-   PaddleOCR: 57.69% (15/26)
-   EasyOCR:   19.23% (5/26)
+| Tipo de Métrica | Descripción | PaddleOCR | EasyOCR |
+|------------------|--------------|------------|----------|
+| **Total de Muestras** | Número de matrículas evaluadas | **26** | **26** |
+| **Coincidencia Exacta** | El texto predicho coincide exactamente con la matrícula real | **57.69% (15/26)** | **19.23% (5/26)** |
+| **Coincidencia Parcial** | Porcentaje de caracteres en común (sin importar el orden) | **86.72%** | **53.16%** |
 
-🔸 Match parcial (caracteres en común, sin importar orden):
-   PaddleOCR: 86.72% promedio de coincidencia
-   EasyOCR:   53.16% promedio de coincidencia
-
-🔸 Similitud tipo fuzzy (SequenceMatcher, sensible a orden):
-   PaddleOCR: 90.00% promedio de similitud
-   EasyOCR:   58.05% promedio de similitud
 
 **Datos de evaluacion de OCR:** [Descargar desde Google Drive](https://drive.google.com/file/d/13HLXpTfed3lPHB0SREQOlc_tWg9aLSD7/view?usp=sharing)
 
@@ -141,7 +134,7 @@ Se evaluaron dos métodos de reconocimiento de texto:
 
 ---
 
-## Posibles Extensiones
+### Posibles Extensiones
 
 - Análisis del flujo direccional de vehículos y personas (entradas/salidas).  
 - Detección de matrículas mediante métodos basados en contornos.  
