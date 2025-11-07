@@ -118,10 +118,19 @@ Este filtrado permite obtener un listado limpio y preciso de las matrículas det
 
 Se evaluaron dos métodos de reconocimiento de texto:
 
-| Método | Precisión Media | Tiempo Promedio por Detección (ms) | Robustez ante Ruido |
-|---------|------------------|------------------------------------|----------------------|
-| EasyOCR | xx.x% | xx.x | Media |
-| PaddleOCR | xx.x% | xx.x | Alta |
+🔹 Total de muestras: 26
+──────────────────────────────────────────────
+🔸 Exact Match:
+   PaddleOCR: 57.69% (15/26)
+   EasyOCR:   19.23% (5/26)
+
+🔸 Match parcial (caracteres en común, sin importar orden):
+   PaddleOCR: 86.72% promedio de coincidencia
+   EasyOCR:   53.16% promedio de coincidencia
+
+🔸 Similitud tipo fuzzy (SequenceMatcher, sensible a orden):
+   PaddleOCR: 90.00% promedio de similitud
+   EasyOCR:   58.05% promedio de similitud
 
 **Conclusiones OCR:**
 - PaddleOCR mostró mejor rendimiento frente a matrículas borrosas, sucias o inclinadas.  
