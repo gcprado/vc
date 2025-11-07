@@ -99,7 +99,8 @@ El sistema fue probado sobre un vídeo de ejemplo, realizando las siguientes tar
 - **Vídeo original:** [C0142.MP4](https://drive.google.com/file/d/1aY4ROz7G3PcyhdQZp1BRLN6NohsX8mlF/view?usp=sharing)  
 - **Vídeo procesado (resultados):** [detecciones_y_ocr.mp4](https://drive.google.com/file/d/1Dq_CaNwxfpyMGIyga36OlxNeadNXorfp/view?usp=sharing)
 - **Archivo CSV generado:** [out/reporte_ocr_final.csv](out/reporte_ocr_final.csv)
-- **Archivo CSV con matriculas filtradas:** [out/matriculas_filtradas_final.csv](out/matriculas_filtradas_final.csv)  
+- **Archivo CSV con matriculas filtradas:** [out/matriculas_filtradas_final.csv](out/matriculas_filtradas_final.csv)
+- **Archivo CSV con comparacion de OCR's:** [out/ocr_comparison.csv](out/ocr_comparison.csv)  
 
 El archivo `reporte_ocr_final.csv` incluye, para cada detección:  
 número de fotograma, tipo de objeto, confianza, identificador de tracking, coordenadas de la caja delimitadora, matrícula detectada, coordenadas de la matrícula y resultados OCR con sus respectivas confianzas.
