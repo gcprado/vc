@@ -12,5 +12,6 @@ Cada práctica se encuentra en su directorio correspondiente vc_px, siendo (x) e
 - [Práctica 2](vc_p2/README.md)
 - [Práctica 3](vc_p3/README.md)
 - [Práctica 4](vc_p4/README.md)
+- [Práctica 5](vc_p5/README.md)
 ***
 Obra bajo licencia de Creative Commons Reconocimiento - No Comercial 4.0 Internacional
