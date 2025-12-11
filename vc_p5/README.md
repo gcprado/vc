@@ -108,7 +108,6 @@ Este cuaderno implementa un sistema de aplicación de filtros y efectos visuales
    - Busca filtros específicos en `out/filters/` para cada categoría
    - Aplica superposiciones, máscaras o efectos según la edad detectada usando mediapipe.
    - Maneja casos donde los filtros no están disponibles
-```
 
 **Demostraciones visuales:**
 
