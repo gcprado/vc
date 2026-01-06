@@ -28,15 +28,14 @@ El dataset SKU110K se organizó siguiendo la estructura estándar de YOLO:
 
 ```
 .
-├── test
-│   ├── images
-│   └── labels
-├── train
-│   ├── images
-│   └── labels
-└── val
-    ├── images
-    └── labels
+├── images
+│   ├── test
+│   ├── train
+│   └── val
+└── labels
+    ├── test
+    ├── train
+    └── val
 ```
 
 **Training set:** Este subconjunto contiene 8,219 imágenes y sus anotaciones, utilizadas para entrenar los modelos de detección de objetos.  
@@ -46,7 +45,8 @@ El dataset SKU110K se organizó siguiendo la estructura estándar de YOLO:
 **Test set:** Este subconjunto incluye 2,936 imágenes, diseñadas para la evaluación final de los modelos entrenados de detección de objetos.
 
 **Archivo YAML oficial para el entrenamiento con Ultralytics:** [Ver aquí](https://docs.ultralytics.com/datasets/detect/sku-110k/#dataset-yaml)  
-**Artículo original del dataset SKU110K:** [Leer Paper](https://arxiv.org/pdf/1904.00853)
+**Artículo original del dataset SKU110K:** [**Goldman, E., Herzig, R., Eisenschtat, A., Goldberger, J., & Hassner, T. (2019).** *Precise Detection in Densely Packed Scenes.* In *Proceedings of the Conference on Computer Vision and Pattern Recognition (CVPR).*](https://arxiv.org/pdf/1904.00853)
+
 
 #### Modelo y entrenamiento
 Se utilizó un modelo base **YOLOv8n** preentrenado en COCO, adaptado al dataset.  
@@ -109,6 +109,45 @@ La validación se realizó sobre el conjunto de prueba (split *test*), utilizand
 - El optimizador se seleccionó automáticamente (AdamW), ajustando `lr` y `momentum` de forma óptima.  
 - Se aplicaron transformaciones de aumento de datos leves durante el entrenamiento, incluyendo blur, median blur, conversión a gris y CLAHE con baja probabilidad, para mejorar la generalización.  
 - El modelo validado mostró consistencia entre las métricas de precisión y recall a lo largo de los 10 epochs, indicando buen balance entre detección de objetos y control de falsos positivos.
+
+---
+
+### Procesamiento de Imagenes
+
+#### CLIP‑ViT‑B‑32
+
+El dataset **LAION-5B** es un conjunto masivo de **5,85 mil millones de pares imagen-texto filtrados con CLIP**, desarrollado para investigación en modelos multimodales a gran escala. Representa un incremento de más de 14 veces respecto a su predecesor, **LAION-400M**, anteriormente el dataset abierto más grande del mundo. Aproximadamente 2,3 mil millones de muestras están en inglés, 2,2 mil millones en más de 100 idiomas adicionales, y 1 mil millón contiene textos sin asignación lingüística clara (por ejemplo, nombres propios).  
+
+El dataset incluye herramientas para exploración y creación de subconjuntos, índices de vecinos más cercanos, así como puntuaciones de detección de marcas de agua y contenido NSFW. LAION-5B ha sido diseñado para permitir la investigación de modelos de imagen-texto a gran escala, y ha servido como base para entrenar modelos tipo CLIP de manera reproducible y accesible públicamente.
+
+**Artículo original sobre CLIP y LAION-5B:** [**Radford, A., Kim, J. W., Hallacy, C., Ramesh, A., Goh, G., Agarwal, S., Sastry, G., Askell, A., Mishkin, P., Clark, J., Krueger, G., & Sutskever, I. (2021).** *Learning Transferable Visual Models From Natural Language Supervision.* In *International Conference on Machine Learning (ICML).*](https://laion.ai/blog/laion-5b/)
+
+Para la identificación de productos, se utilizó el modelo **CLIP ViT-B-32 entrenado con LAION-2B (CLIP-ViT-B-32-laion2B-s34B-b79K)**, un **subconjunto filtrado de LAION-5B** que contiene pares imagen-texto seleccionados mediante CLIP para un tamaño más manejable y para facilitar el entrenamiento reproducible de modelos zero-shot.  
+
+Este modelo genera embeddings de imagen y texto que permiten realizar clasificación **zero-shot** de ROIs detectados por YOLOv8. 
+
+El sistema fue probado sobre un vídeo de ejemplo, realizando las siguientes tareas:
+
+- Detección de productos utilizando YOLO8v (detección).  
+- Detección de productos utilizando SAM3 (segmentación).
+- Reconocimiento del producto mediante **CLIP‑ViT‑B‑32** y **alternativo?**.  
+- Generación de un **archivo CSV** con todas comparaciones.
+
+---
+
+### Resultados
+
+- **Imagenes originales:** [productos.mp4](https://drive.google.com/file/)  
+- **Imagenes procesadas (resultados):** [detecciones.mp4](https://drive.google.com/file/)
+- **Archivo CSV generado:** [out/reporte_final.csv](out/reporte_final.csv)
+
+El archivo `reporte_final.csv` incluye, para cada detección:  
+imagen fuente (seccion/camara), tipo de objeto (solo object), confianza, identificador de tracking, coordenadas de la caja delimitadora, producto reconocido, resultados lvm con sus respectivas confianzas.
+
+reporte filtrado con confiazas superiores a un threshold?
+porcenaje de aciertos?
+
+Este filtrado permite obtener un listado limpio y preciso de las detecciones, ideal para reportes o análisis posteriores.
 
 ---
 
