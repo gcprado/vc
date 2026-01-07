@@ -114,7 +114,7 @@ La validación se realizó sobre el conjunto de prueba (split *test*), utilizand
 
 ### Procesamiento de Imagenes
 
-#### CLIP‑ViT‑B‑32
+#### CLIP‑ViT‑B/32
 
 El dataset **LAION-5B** es un conjunto masivo de **5,85 mil millones de pares imagen-texto filtrados con CLIP**, desarrollado para investigación en modelos multimodales a gran escala. Representa un incremento de más de 14 veces respecto a su predecesor, **LAION-400M**, anteriormente el dataset abierto más grande del mundo. Aproximadamente 2,3 mil millones de muestras están en inglés, 2,2 mil millones en más de 100 idiomas adicionales, y 1 mil millón contiene textos sin asignación lingüística clara (por ejemplo, nombres propios).  
 
@@ -122,7 +122,7 @@ El dataset incluye herramientas para exploración y creación de subconjuntos, �
 
 **Artículo original sobre CLIP y LAION-5B:** [**Radford, A., Kim, J. W., Hallacy, C., Ramesh, A., Goh, G., Agarwal, S., Sastry, G., Askell, A., Mishkin, P., Clark, J., Krueger, G., & Sutskever, I. (2021).** *Learning Transferable Visual Models From Natural Language Supervision.* In *International Conference on Machine Learning (ICML).*](https://laion.ai/blog/laion-5b/)
 
-Para la identificación de productos, se utilizó el modelo **CLIP ViT-B-32 entrenado con LAION-2B (CLIP-ViT-B-32-laion2B-s34B-b79K)**, un **subconjunto filtrado de LAION-5B** que contiene pares imagen-texto seleccionados mediante CLIP para un tamaño más manejable y para facilitar el entrenamiento reproducible de modelos zero-shot.  
+Para la identificación de productos, se utilizó el modelo **CLIP ViT-B/32 entrenado con LAION-2B (CLIP-ViT-B/32-laion2B-s34B-b79K)**, un **subconjunto filtrado de LAION-5B** que contiene pares imagen-texto seleccionados mediante CLIP para un tamaño más manejable y para facilitar el entrenamiento reproducible de modelos zero-shot.  
 
 Este modelo genera embeddings de imagen y texto que permiten realizar clasificación **zero-shot** de ROIs detectados por YOLOv8. 
 
@@ -130,9 +130,10 @@ El sistema fue probado sobre un vídeo de ejemplo, realizando las siguientes tar
 
 - Detección de productos utilizando YOLO8v (detección).  
 - Detección de productos utilizando SAM3 (segmentación).
-- Reconocimiento del producto mediante **CLIP‑ViT‑B‑32** y **alternativo?**.  
+- Reconocimiento del producto mediante **CLIP‑ViT‑B/32**.  
 - Generación de un **archivo CSV** con todas comparaciones.
 
+comparacion con **CLIP‑ViT‑H/14**?
 ---
 
 ### Resultados
