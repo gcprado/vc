@@ -1,20 +1,21 @@
-# Un estudio comparativo sobre YOLOv8 y SAM+LVM aplicado a un Sistema de Detección, Conteo y Gestión de Inventario 
+# Aplicacion de Métodos de Detección, Segmentación y Agrupamiento Visual basados en Modelos de Visión para Sistemas Automáticos de Conteo y Gestión de Inventario
 
 ## Descripción del Proyecto
 
 Este proyecto desarrolla un sistema de visión por computador capaz de:
 
 Parte teorica:
-- Evaluar la precisión y consistencia de un modelo YOLO + LVM en entornos de inventario realistas.
-- Evaluar la precision y consistencia de un modelo SAM + LVM en entornos de inventario realistas.
-- Comparar el rendimiento de dos enfoques: **YOLOv8 entrenado** vs **SAM + LVM**.
+- Evaluar la precisión y consistencia de YOLO + LVM en entornos de inventario realistas.
+- Evaluar la precision y consistencia de SAM + LVM en entornos de inventario realistas.
+- Evaluar la utilidad que aportan métodos de segmentación no supervisados (DBSCAN) en entornos de inventario realistas.
+- Comparar el rendimiento de dos enfoques: **Detección** vs **Segmentación**.
 
 Parte practica:
 - Detectar, contar y seguir productos en **estanterías**.
 - Detectar reposiciones y retiros de productos.
-- Generar un panel de control de **inventario** en tiempo real.
+- Generar un panel de control de **inventario**.
 - Generar gráficos de evolución de inventario por producto y realizar predicciones sobre stock.
-- Analizar resutaldos con LLM.
+- Analizar resultaldos con LLM.
 - Exportar ficheros csv con resultaods
 
 ---
