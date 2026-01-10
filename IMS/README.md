@@ -5,18 +5,16 @@
 Este proyecto desarrolla un sistema de visión por computador capaz de:
 
 Parte teorica:
-- Evaluar la precisión y consistencia de YOLO + LVM en entornos de inventario realistas.
-- Evaluar la precision y consistencia de SAM + LVM en entornos de inventario realistas.
-- Evaluar la utilidad que aportan métodos de segmentación no supervisados (DBSCAN) en entornos de inventario realistas.
-- Comparar el rendimiento de dos enfoques: **Detección** vs **Segmentación**.
+- Evaluar la utilidad, precisión y consistencia de diversas tecnologías de detección y segmentación en entornos de inventario reales.  
+- Comparar la efectividad de diferentes metodologías para abordar los retos específicos que plantea la gestión de inventario.
+- Aplicar tecnologías del estado del arte como YOLO, SAM3, OpenCLIP y DINOv3 para resolver problemas de detección y segmentación de manera eficiente y escalable en entornos de inventario.  
+- Analizar el aporte de los métodos de agrupamiento (clustering) para mejorar la organización, categorización y gestión de los objetos en inventarios complejos, identificando patrones y relaciones entre los productos.
 
 Parte practica:
-- Detectar, contar y seguir productos en **estanterías**.
-- Detectar reposiciones y retiros de productos.
-- Generar un panel de control de **inventario**.
-- Generar gráficos de evolución de inventario por producto y realizar predicciones sobre stock.
-- Analizar resultaldos con LLM.
-- Exportar ficheros csv con resultaods
+- Ser capaz de detectar, contar y seguir productos en estanterías.
+- Ser capaz de detectar reposiciones y retiros de productos.
+- Ser capaz de generar un panel de control de inventario.
+- Ser capaz de generar gráficos de evolución de inventario por producto y realizar predicciones sobre stock.
 
 ---
 
@@ -115,17 +113,17 @@ La validación se realizó sobre el conjunto de prueba (split *test*), utilizand
 
 ### Procesamiento de Imagenes
 
-#### CLIP‑ViT‑B/32
+#### OpenCLIP (LAION-2B)
 
 El dataset **LAION-5B** es un conjunto masivo de **5,85 mil millones de pares imagen-texto filtrados con CLIP**, desarrollado para investigación en modelos multimodales a gran escala. Representa un incremento de más de 14 veces respecto a su predecesor, **LAION-400M**, anteriormente el dataset abierto más grande del mundo. Aproximadamente 2,3 mil millones de muestras están en inglés, 2,2 mil millones en más de 100 idiomas adicionales, y 1 mil millón contiene textos sin asignación lingüística clara (por ejemplo, nombres propios).  
 
-El dataset incluye herramientas para exploración y creación de subconjuntos, índices de vecinos más cercanos, así como puntuaciones de detección de marcas de agua y contenido NSFW. LAION-5B ha sido diseñado para permitir la investigación de modelos de imagen-texto a gran escala, y ha servido como base para entrenar modelos tipo CLIP de manera reproducible y accesible públicamente.
+LAION-5B ha sido diseñado para permitir la investigación de modelos de imagen-texto a gran escala, y ha servido como base para entrenar modelos tipo CLIP de manera reproducible y accesible públicamente.
 
 **Artículo original sobre CLIP y LAION-5B:** [**Radford, A., Kim, J. W., Hallacy, C., Ramesh, A., Goh, G., Agarwal, S., Sastry, G., Askell, A., Mishkin, P., Clark, J., Krueger, G., & Sutskever, I. (2021).** *Learning Transferable Visual Models From Natural Language Supervision.* In *International Conference on Machine Learning (ICML).*](https://laion.ai/blog/laion-5b/)
 
-Para la identificación de productos, se utilizó el modelo **CLIP ViT-B/32 entrenado con LAION-2B (CLIP-ViT-B/32-laion2B-s34B-b79K)**, un **subconjunto filtrado de LAION-5B** que contiene pares imagen-texto seleccionados mediante CLIP para un tamaño más manejable y para facilitar el entrenamiento reproducible de modelos zero-shot.  
+Para la identificación de productos, se utilizaron los modelos **CLIP ViT-B/32 y CLIP ViT-L/14 entrenado con LAION-2B**, un **subconjunto filtrado de LAION-5B** que contiene pares imagen-texto seleccionados mediante CLIP para un tamaño más manejable y para facilitar el entrenamiento reproducible de modelos zero-shot.  
 
-Este modelo genera embeddings de imagen y texto que permiten realizar clasificación **zero-shot** de ROIs detectados por YOLOv8. 
+Estos modelos genera embeddings de imagen y texto que permiten realizar clasificación **zero-shot** de ROIs detectados por YOLO. 
 
 El sistema fue probado sobre un vídeo de ejemplo, realizando las siguientes tareas:
 
@@ -134,7 +132,6 @@ El sistema fue probado sobre un vídeo de ejemplo, realizando las siguientes tar
 - Reconocimiento del producto mediante **CLIP‑ViT‑B/32**.  
 - Generación de un **archivo CSV** con todas comparaciones.
 
-comparacion con **CLIP‑ViT‑H/14**?
 ---
 
 ### Resultados
@@ -145,11 +142,6 @@ comparacion con **CLIP‑ViT‑H/14**?
 
 El archivo `reporte_final.csv` incluye, para cada detección:  
 imagen fuente (seccion/camara), tipo de objeto (solo object), confianza, identificador de tracking, coordenadas de la caja delimitadora, producto reconocido, resultados lvm con sus respectivas confianzas.
-
-reporte filtrado con confiazas superiores a un threshold?
-porcenaje de aciertos?
-
-Este filtrado permite obtener un listado limpio y preciso de las detecciones, ideal para reportes o análisis posteriores.
 
 ---
 
