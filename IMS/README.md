@@ -6,15 +6,15 @@
 
 La gestión de inventarios en entornos comerciales y logísticos modernos representa un desafío cada vez más complejo debido al alto volumen y diversidad de productos, la necesidad de mantener información actualizada en tiempo real y la reducción de errores humanos en los procesos de control de stock. Tradicionalmente, estas tareas se han realizado de forma manual o semiautomática, lo que conlleva costes elevados, falta de escalabilidad y una alta probabilidad de inconsistencias en los datos.
 
-En los últimos años, los avances en **visión por computador y aprendizaje profundo** han demostrado un gran potencial para automatizar tareas de percepción visual como la detección, segmentación y reconocimiento de objetos. Modelos del estado del arte como YOLO, Segment Anything o CLIP permiten hoy en día abordar problemas que hasta hace poco requerían intervención humana directa.
+En los últimos años, los avances en visión por computador y aprendizaje profundo han demostrado un gran potencial para automatizar tareas de percepción visual como la detección, segmentación y reconocimiento de objetos. Modelos del estado del arte como YOLO, Segment Anything o CLIP permiten hoy en día abordar problemas que hasta hace poco requerían intervención humana directa.
 
-Este trabajo surge de la motivación de **explorar y aplicar estas tecnologías en un problema realista y de alto impacto práctico**: la automatización del conteo y la gestión de inventario mediante sistemas de visión artificial. Además, se busca no solo implementar una solución funcional, sino también **analizar, comparar y comprender** las fortalezas y limitaciones de los distintos enfoques existentes, evaluando su viabilidad en escenarios reales de uso.
+Este trabajo surge de la motivación de explorar y aplicar estas tecnologías en un problema realista y de alto impacto práctico: la automatización del conteo y la gestión de inventario mediante sistemas de visión artificial. Además, se busca no solo implementar una solución funcional, sino también analizar, comparar y comprender las fortalezas y limitaciones de los distintos enfoques existentes, evaluando su viabilidad en escenarios reales de uso.
 
 ## Objetivos del Trabajo
 
 ### Objetivo General
 
-Desarrollar y evaluar un sistema basado en **visión por computador** capaz de contar productos en estanterías, con el fin de **automatizar tareas de control y gestión de inventario** en entornos comerciales o logísticos.
+Desarrollar y evaluar un sistema basado en visión por computador capaz de contar productos en estanterías, con el fin de automatizar tareas de control y gestión de inventario en entornos comerciales o logísticos.
 
 ### Objetivos Específicos
 
@@ -31,6 +31,12 @@ Desarrollar y evaluar un sistema basado en **visión por computador** capaz de c
 
 
 ## Descripción técnica del trabajo realizado
+
+El pipeline propuesto para el sistema de gestión de inventario es el siguiente:
+
+**Imágenes → Detección → Clasificación → Persistencia de resultados → Visualización de resultados**
+
+De este modo, el primer paso del pipeline consiste en realizar la detección de los productos presentes en las imágenes. Para ello, se propone entrenar un modelo de detección de objetos en tiempo real basado en YOLOv8 de Ultralytics, adaptado al dataset específico de estanterías comerciales.
 
 ### Dataset y Entrenamiento del Modelo
 
@@ -62,17 +68,15 @@ El dataset SKU110K se organizó siguiendo la estructura estándar de YOLO:
 
 
 #### Modelo y entrenamiento
-Se utilizó un modelo base **YOLOv8n** preentrenado en COCO, adaptado al dataset.  
-El entrenamiento se realizó durante 10 épocas con imágenes de 640×640 píxeles y batch size de 8. 
+Se utilizó un modelo base **YOLOv8n** preentrenado en COCO, adaptado al dataset.  El entrenamiento se realizó durante 10 épocas con imágenes de 640×640 píxeles y batch size de 8. 
 
-El modelo resultante se guarda en:
-`yolov8_train_results/content/runs/detect/train/weights/best.pt`
+El modelo resultante se guarda en: `yolov8_train_results/content/runs/detect/train/weights/best.pt`
 
 ---
 
 ### Resultados del Entrenamiento
 
-Durante el proceso de entrenamiento se generaron diversas gráficas que permiten analizar el rendimiento del modelo. Todas se encuentran en: `yolov8_train_results/content/runs/detect/train/`
+Durante el proceso de entrenamiento se generaron diversas gráficas que permiten analizar el rendimiento del modelo.
 
 A continuación se incluyen los enlaces a las principales métricas visuales:
 
@@ -101,7 +105,7 @@ A continuación se muestran ejemplos del conjunto de entrenamiento y validación
 
 ### Evaluación del Modelo
 
-La validación se realizó sobre el conjunto de prueba (split *test*), utilizando el modelo **YOLOv8n** entrenado durante 10 épocas con imágenes de 640×640 píxeles en batches de tamaño 8.
+La validación se realizó sobre el conjunto de prueba (split *test*), utilizando el modelo **YOLOv8n** entrenado.
 
 **Resumen del rendimiento final:**
 
@@ -123,32 +127,77 @@ La validación se realizó sobre el conjunto de prueba (split *test*), utilizand
 - Se aplicaron transformaciones de aumento de datos leves durante el entrenamiento, incluyendo blur, median blur, conversión a gris y CLAHE con baja probabilidad, para mejorar la generalización.  
 - El modelo validado mostró consistencia entre las métricas de precisión y recall a lo largo de los 10 epochs, indicando buen balance entre detección de objetos y control de falsos positivos.
 
+Una vez entrenado el modelo **YOLOv8**, este es capaz de detectar los productos presentes en la escena con una **precisión del 88.3%**.  
+
+A continuación se muestran ejemplos de detecciones en diferentes secciones de un comercio, ilustrando el rendimiento del modelo:
+
+![Detecciones-Yolo-1](assets/resultados_deteccion_1.png)
+![Detecciones-Yolo-2](assets/resultados_deteccion_2.png)
+![Detecciones-Yolo-3](assets/resultados_deteccion_3.png)
+![Detecciones-Yolo-4](assets/resultados_deteccion_4.png)
+
+En un principio, conocer la cantidad total de productos es relativamente sencillo: basta con contar la cantidad de **bounding boxes** detectadas en la imagen.
+
+| SECCIÓN               | PRODUCTOS |
+|----------------------|-----------|
+| SECCION-ALIMENTOS-1  | 141       |
+| SECCION-ALIMENTOS-2  | 164       |
+| SECCION-ASEO-1       | 130       |
+| SECCION-ASEO-2       | 123       |
+| SECCION-BEBIDAS-1    | 179       |
+| SECCION-BEBIDAS-2    | 134       |
+| SECCION-BEBIDAS-3    | 148       |
+| SECCION-LIMPIEZA-1   | 252       |
+| SECCION-LIMPIEZA-2   | 252       |
+| SECCION-LIMPIEZA-3   | 236       |
+| SECCION-MEDICAMENTOS-1 | 144     |
+
+### Utilizacion de SAM para la realizacion de deteccionoes
+
+TODO: PENDIENTE REDACTAR
+
 ---
 
 ### Procesamiento de Imagenes
 
+El siguiente desafío consiste en **clasificar cada uno de los productos detectados**. Para ello, se plantean dos enfoques:
+
+1. **Clasificación zero-shot mediante un modelo multimodal (CLIP):**  
+   Este enfoque permite asignar etiquetas a los productos sin necesidad de un entrenamiento específico para cada categoría, aprovechando la capacidad del modelo de relacionar imágenes y texto de manera directa.
+
+2. **Comparación de embeddings generados por modelos self-supervised (DINOv2):**  
+   Este método consiste en representar cada producto mediante un embedding visual y comparar estas representaciones entre sí, permitiendo agrupar o identificar productos similares basándose en su similitud en el espacio de características aprendido.
+
 #### OpenCLIP (LAION-2B)
 
-El dataset **LAION-5B** es un conjunto masivo de **5,85 mil millones de pares imagen-texto filtrados con CLIP**, desarrollado para investigación en modelos multimodales a gran escala. Representa un incremento de más de 14 veces respecto a su predecesor, **LAION-400M**, anteriormente el dataset abierto más grande del mundo. Aproximadamente 2,3 mil millones de muestras están en inglés, 2,2 mil millones en más de 100 idiomas adicionales, y 1 mil millón contiene textos sin asignación lingüística clara (por ejemplo, nombres propios).  
+El dataset **LAION-5B** es un conjunto masivo de **5,85 mil millones de pares imagen-texto**, desarrollado para investigación en modelos multimodales a gran escala. Representa un incremento de más de 14 veces respecto a su predecesor, **LAION-400M**, anteriormente el dataset abierto más grande del mundo. Aproximadamente 2,3 mil millones de muestras están en inglés, 2,2 mil millones en más de 100 idiomas adicionales, y 1 mil millón contiene textos sin asignación lingüística clara (por ejemplo, nombres propios).  
 
 LAION-5B ha sido diseñado para permitir la investigación de modelos de imagen-texto a gran escala, y ha servido como base para entrenar modelos tipo CLIP de manera reproducible y accesible públicamente.
 
-**Artículo original sobre CLIP y LAION-5B:** [**Radford, A., Kim, J. W., Hallacy, C., Ramesh, A., Goh, G., Agarwal, S., Sastry, G., Askell, A., Mishkin, P., Clark, J., Krueger, G., & Sutskever, I. (2021).** *Learning Transferable Visual Models From Natural Language Supervision.* In *International Conference on Machine Learning (ICML).*](https://laion.ai/blog/laion-5b/)
+**Artículo original sobre CLIP y LAION-5B:** [**Radford, A., Kim, J. W., Hallacy, C., Ramesh, A., Goh, G. et al. (2021).** *Learning Transferable Visual Models From Natural Language Supervision.* In *International Conference on Machine Learning (ICML).*](https://laion.ai/blog/laion-5b/)
 
 Para la identificación de productos, se utilizaron los modelos **CLIP ViT-B/32 y CLIP ViT-L/14 entrenado con LAION-2B**, un **subconjunto filtrado de LAION-5B** que contiene pares imagen-texto seleccionados mediante CLIP para un tamaño más manejable y para facilitar el entrenamiento reproducible de modelos zero-shot.  
 
 Estos modelos genera embeddings de imagen y texto que permiten realizar clasificación **zero-shot** de ROIs detectados por YOLO. 
 
-El sistema fue probado sobre un vídeo de ejemplo, realizando las siguientes tareas:
+#### DINOv2
+
+DINOv2 es un modelo **self-supervised** para aprendizaje de representaciones visuales, capaz de generar embeddings de alta calidad que permitirá **comparar productos y realizar análisis mediante clustering** de los objetos detectados.
+
+**Artículo original sobre DINOv2:** [**Oquab, M., Darcet, T., Moutakanni, T., Vo, H., Szafraniec, M. et al. (2023).** *DINOv2: Learning Robust Visual Features without Supervision.* In Transactions on Machine Learning Research (TMLR).*](https://arxiv.org/pdf/2304.07193)
+
+En este trabajo, los embeddings generados por DINOv2 se utilizan para representar cada producto detectado por YOLO, permitiendo aplicar técnicas de **clustering y comparación de similitud** entre productos, lo que facilita la agrupación automática y el análisis de inventario visual.
+
+---
+
+### Resultados Obtenidos
+
+Se ponen a prueba ambos enfoques sobre una serie de imagenes capturadas en diferentes secciones de un comercio.
 
 - Detección de productos utilizando YOLO8v (detección).  
 - Detección de productos utilizando SAM3 (segmentación).
 - Reconocimiento del producto mediante **CLIP‑ViT‑B/32**.  
 - Generación de un **archivo CSV** con todas comparaciones.
-
----
-
-### Resultados Obtenidos
 
 - **Imagenes originales:** [productos.mp4](https://drive.google.com/file/)  
 - **Imagenes procesadas (resultados):** [detecciones.mp4](https://drive.google.com/file/)
