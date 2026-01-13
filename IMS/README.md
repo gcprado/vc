@@ -182,19 +182,27 @@ Se evaluaron dos métodos de reconocimiento de texto:
 
 ### Propuestas de ampliación
 
-- Integración con **LLM's** para generar reportes automáticos y alertas detalladas.   
-- Comparación con otros modelos de segmentación y detección para optimización del pipeline.  
-- Desarrollo de aplicacion full-stack que integre todo.  
-  
+- Desarrollo de aplicacion full-stack que integre todo y aporte una UI.  
+- Integración con **LLM's** para generar reportes automáticos y alertas detalladas.    
+
 ---
 
 ## Fuentes y tecnologías utilizadas
 
-YOLO, SAM3, OpenCLIP y DINOv3
+- **YOLOv8 y YOLOv11**: para detección de objetos en imágenes y vídeo, adaptado al dataset SKU110K.  
+- **SAM2 y SAM3 (Segment Anything Model)**: para segmentación automática de productos en estanterías.  
+- **OpenCLIP (ViT-B/32 y ViT-L/14)**: para reconocimiento y clasificación zero-shot de productos mediante embeddings multimodales.  
+- **DINOv2 y DINOv3**: para extracción de características visuales y análisis de similitudes entre productos.  
+- **K-Means, DBSCAN, PCA y UMAP**: para agrupamiento automático de productos según sus embeddings visuales.  
+- **PyTorch, OpenCV, scikit-learn y Ultralytics**: frameworks y librerías para entrenamiento, procesamiento de imágenes y visualización de resultados.
+
 
 ---
 
 ## Indicación de herramientas/tecnologías con las que se hubiera gustado contar
+
+- **GPU de mayor capacidad** para acelerar entrenamientos de modelos grandes y experimentos con múltiples configuraciones.  
+- **Datasets de retail con máscaras de segmentación**, en lugar de solo bounding boxes, que permitieran entrenar y evaluar modelos de segmentación más precisos.  
 
 ---
 
