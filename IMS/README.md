@@ -1,22 +1,36 @@
-# Aplicacion de Métodos de Detección, Segmentación y Agrupamiento Visual basados en Modelos de Visión para Sistemas Automáticos de Conteo y Gestión de Inventario
+<p align="center">
+  <img src="assets/portada.png" alt="Portada del proyecto" width="700"/>
+</p>
 
-## Descripción del Proyecto
+## Motivación
 
-Este proyecto desarrolla un sistema de visión por computador capaz de:
+La gestión de inventarios en entornos comerciales y logísticos modernos representa un desafío cada vez más complejo debido al alto volumen y diversidad de productos, la necesidad de mantener información actualizada en tiempo real y la reducción de errores humanos en los procesos de control de stock. Tradicionalmente, estas tareas se han realizado de forma manual o semiautomática, lo que conlleva costes elevados, falta de escalabilidad y una alta probabilidad de inconsistencias en los datos.
 
-Parte teorica:
-- Evaluar la utilidad, precisión y consistencia de diversas tecnologías de detección y segmentación en entornos de inventario reales.  
-- Comparar la efectividad de diferentes metodologías para abordar los retos específicos que plantea la gestión de inventario.
-- Aplicar tecnologías del estado del arte como YOLO, SAM3, OpenCLIP y DINOv3 para resolver problemas de detección y segmentación de manera eficiente y escalable en entornos de inventario.  
-- Analizar el aporte de los métodos de agrupamiento (clustering) para mejorar la organización, categorización y gestión de los objetos en inventarios complejos, identificando patrones y relaciones entre los productos.
+En los últimos años, los avances en **visión por computador y aprendizaje profundo** han demostrado un gran potencial para automatizar tareas de percepción visual como la detección, segmentación y reconocimiento de objetos. Modelos del estado del arte como YOLO, Segment Anything o CLIP permiten hoy en día abordar problemas que hasta hace poco requerían intervención humana directa.
 
-Parte practica:
-- Ser capaz de detectar, contar y seguir productos en estanterías.
-- Ser capaz de detectar reposiciones y retiros de productos.
-- Ser capaz de generar un panel de control de inventario.
-- Ser capaz de generar gráficos de evolución de inventario por producto y realizar predicciones sobre stock.
+Este trabajo surge de la motivación de **explorar y aplicar estas tecnologías en un problema realista y de alto impacto práctico**: la automatización del conteo y la gestión de inventario mediante sistemas de visión artificial. Además, se busca no solo implementar una solución funcional, sino también **analizar, comparar y comprender** las fortalezas y limitaciones de los distintos enfoques existentes, evaluando su viabilidad en escenarios reales de uso.
 
----
+## Objetivos del Trabajo
+
+### Objetivo General
+
+Desarrollar y evaluar un sistema basado en **visión por computador** capaz de contar productos en estanterías, con el fin de **automatizar tareas de control y gestión de inventario** en entornos comerciales o logísticos.
+
+### Objetivos Específicos
+
+- Estudiar y aplicar modelos del estado del arte en detección y segmentación de objetos, como **YOLO y SAM**.  
+- Entrenar y evaluar un modelo de detección sobre un dataset realista de alta densidad de objetos (**SKU110K**).  
+- Integrar modelos multimodales como **CLIP** para el reconocimiento de productos mediante clasificación zero-shot.  
+- Aplicar métodos de **clustering** como **K-Means y DBSCAN** sobre **embeddings de productos** reducidos con **PCA** para agruparlos automáticamente según su similitud visual.
+- Diseñar un pipeline completo que permita:
+  - Detectar productos en imágenes y vídeo.  
+  - Clasificar productos y contar instancias
+  - Realizar un seguimiento temporal para generar gráficos de evolución de inventario por producto y realizar predicciones sobre stock.
+- Analizar el rendimiento de los distintos enfoques mediante métricas cuantitativas y comparativas experimentales.  
+- Evaluar la viabilidad del uso de estos sistemas como apoyo a la gestión automática de inventario en escenarios reales.
+
+
+## Descripción técnica del trabajo realizado
 
 ### Dataset y Entrenamiento del Modelo
 
@@ -134,7 +148,7 @@ El sistema fue probado sobre un vídeo de ejemplo, realizando las siguientes tar
 
 ---
 
-### Resultados
+### Resultados Obtenidos
 
 - **Imagenes originales:** [productos.mp4](https://drive.google.com/file/)  
 - **Imagenes procesadas (resultados):** [detecciones.mp4](https://drive.google.com/file/)
@@ -145,7 +159,7 @@ imagen fuente (seccion/camara), tipo de objeto (solo object), confianza, identif
 
 ---
 
-### Comparativa de Métodos
+### Ánalisis de resutados y comparativa de las distintas metodologías.
 
 Se evaluaron dos métodos de reconocimiento de texto:
 
@@ -162,12 +176,26 @@ Se evaluaron dos métodos de reconocimiento de texto:
 
 ---
 
-### Posibles Extensiones
+## Conclusiones finales
+
+---
+
+### Propuestas de ampliación
 
 - Integración con **LLM's** para generar reportes automáticos y alertas detalladas.   
 - Comparación con otros modelos de segmentación y detección para optimización del pipeline.  
 - Desarrollo de aplicacion full-stack que integre todo.  
   
+---
+
+## Fuentes y tecnologías utilizadas
+
+YOLO, SAM3, OpenCLIP y DINOv3
+
+---
+
+## Indicación de herramientas/tecnologías con las que se hubiera gustado contar
+
 ---
 
 ### Autor
