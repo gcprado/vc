@@ -198,8 +198,6 @@ YOLO, SAM3, OpenCLIP y DINOv3
 
 ---
 
-### Autor
+## Repositorio y codigo fuente:
 
-**Giancarlo Prado Abreu**  
-- Trabajo Práctico de Visión por Computador  
-- Escuela de Ingeniería Informática - ULPGC
+https://github.com/gcprado/vc/edit/main/IMS
