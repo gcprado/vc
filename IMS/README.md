@@ -334,7 +334,16 @@ A partir de los datos obtenidos, es posible generar **gráficos visuales** que p
 
 Por ejemplo, para esta sección de un comercio se registraron varias imágenes que muestran la evolución del inventario y la disposición de los productos en distintos momentos:
 
+#### Momento 1:
 ![momento-1](assets/momento-1.png)
+
+#### Momento 2:
+![momento-2](assets/momento-2.jpg)
+
+De manera sucesiva...
+
+ #### Momento 5:
+![momento-5](assets/momento-5.jpg)
 
 | fiesta stawberry | fiesta lime | fiesta cola | fiesta root beer | fiesta orange | fiesta grape | island sun peaches | timestamp |
 |-----------------|------------|------------|-----------------|---------------|--------------|------------------|----------------------------|
@@ -372,11 +381,11 @@ A partir de la tendencia de disminución, se generan predicciones sobre **cuánd
 
 ## Conclusiones finales
 
-En este proyecto se desarrolló un pipeline completo para la clasificación automática de productos a partir de ROIs, combinando clustering por embeddings y clasificación semántica mediante CLIP. El uso de ROIs representativos y votación ponderada por cluster permitió reducir el ruido y mejorar la estabilidad de las predicciones frente a la clasificación individual. Los resultados muestran una alta precisión en la mayoría de las categorías, aunque persisten errores en clases visualmente similares. Finalmente, se exploraron alternativas basadas en matching por embeddings, que abren la puerta a sistemas más eficientes y escalables sin necesidad de reclasificar con modelos pesados en cada iteración.
+En este proyecto se desarrolló un **pipeline completo** para la **detección y clasificación** automática de productos a partir de ROIs, combinando **clustering por embeddings** y **clasificación semántica mediante CLIP**. El uso de **ROIs representativos** y **votación ponderada por cluster** permitió **reducir el ruido** y **mejorar la estabilidad** de las predicciones frente a la clasificación individual. Los resultados muestran una alta precisión en la mayoría de las categorías, aunque persisten errores en clases visualmente similares. Finalmente, se exploraron alternativas basadas en **matching por embeddings**, que abren la puerta a sistemas más eficientes y escalables sin necesidad de reclasificar con modelos pesados en cada iteración.
 
-Asimismo, aunque se exploró el uso de modelos de segmentación como SAM, se concluyó que este tipo de enfoques no resulta práctico en estanterías comerciales debido a la alta similitud visual entre productos, la complejidad del posprocesamiento de máscaras y la escasa disponibilidad de datasets con anotaciones de segmentación.
+Asimismo, aunque se exploró el uso de **modelos de segmentación** como SAM, se concluyó que este tipo de enfoques no resulta práctico en estanterías comerciales debido a la **alta similitud visual** entre productos, la complejidad del posprocesamiento de máscaras y la escasa disponibilidad de datasets con anotaciones de segmentación.
 
-En conjunto, los resultados muestran que el uso de embeddings y estrategias de agregación por cluster constituye una solución eficaz y escalable para este tipo de escenarios.
+En conjunto, los resultados muestran que el uso de **embeddings y estrategias de agregación por cluster** aportan utilidad en este tipo de escenarios.
 
 ---
 
