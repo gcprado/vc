@@ -152,9 +152,30 @@ En un principio, conocer la cantidad total de productos es relativamente sencill
 | SECCION-LIMPIEZA-3   | 236       |
 | SECCION-MEDICAMENTOS-1 | 144     |
 
+#### Rendimiento del modelo en situaciones no ideales
+
+Iluminacion no uniforme:
+![alt text](assets/iluminacion.jpg)
+
+Alto contraste:
+![alt text](assets/contraste.jpg)
+
+Motion blur:
+![alt text](assets/motion-blur.jpg)
+
 ### Utilizacion de SAM para la realizacion de deteccionoes
 
-TODO: PENDIENTE REDACTAR
+Te lo dejo ya **redactado en estilo de informe** y bien estructurado:
+
+---
+
+### Utilización de SAM para la realización de detecciones
+
+Inicialmente se consideró el uso de modelos de segmentación, en particular SAM (Segment Anything Model), como alternativa para la detección de productos en estanterías. Sin embargo, este enfoque resultó poco adecuado para el escenario planteado.
+
+En entornos densamente poblados, como los estantes de retail, los modelos de segmentación tienden a presentar dificultades importantes: las regiones de interés obtenidas suelen tener formas irregulares y fragmentadas, lo que complica considerablemente su posterior posprocesamiento y su integración con otros modelos del pipeline. Además, estos modelos funcionan mejor en escenas donde los objetos a segmentar son semánticamente distintos del fondo, mientras que en estanterías comerciales existe una gran cantidad de productos visualmente muy similares entre sí, lo que dificulta separar correctamente cada instancia del fondo y de los objetos vecinos.
+
+Por último, el entrenamiento o ajuste fino de modelos de segmentación requiere anotaciones en forma de máscaras, que son mucho menos comunes y más costosas de producir que las anotaciones mediante *bounding boxes*. Esto limita la disponibilidad de conjuntos de datos adecuados y hace que este enfoque sea menos práctico en comparación con métodos basados en detección por cajas delimitadoras.
 
 ---
 
@@ -162,7 +183,7 @@ TODO: PENDIENTE REDACTAR
 
 El siguiente desafío consiste en **clasificar cada uno de los productos detectados**. Para ello, se plantean dos enfoques:
 
-1. **Clasificación directa del ROI con zero-shot pop un modelo multimodal (CLIP):**  
+1. **Clasificación directa del ROI con zero-shot por un modelo multimodal (CLIP):**  
    Este enfoque permite asignar etiquetas a los productos sin necesidad de un entrenamiento específico para cada categoría, aprovechando la capacidad del modelo de relacionar imágenes y texto de manera directa.
 
 2. **Extraccion de features mediante embeddings generados por modelos self-supervised (DINOv2):**  
@@ -180,21 +201,43 @@ Para la identificación de productos, se utilizaron los modelos **CLIP ViT-B/32 
 
 Estos modelos genera embeddings de imagen y texto que permiten realizar clasificación **zero-shot** de ROIs detectados por YOLO. 
 
+La figura muestra la disposición de los productos en la sección de un comercio seleccionada para el estudio.
+
+![imagen-base](assets/seccion-bebidas.jpg)
+
+Se utilizó YOLO para identificar las regiones correspondientes a cada producto. La imagen siguiente muestra las detecciones obtenidas:
+
+![detecciones](assets/seccion-bebidas-deteccion.jpg)
+
+Cada región de interés identificada se envió al modelo CLIP para su clasificación automática en la correspondiente categoría de producto.
+
+=== Clase: coke diet (30 imágenes) ===
+![Clasificacion directa 1](assets/directo-1.png)
+
+=== Clase: dr pepper diet (16 imágenes) ===
+![Clasificacion directa 2](assets/directo-2.png)
+
+=== Clase: dr pepper (20 imágenes) ===
+![Clasificacion directa 3](assets/directo-3.png)
+
+=== Clase: coca cola bottle (12 imágenes) ===
+![Clasificacion directa 4](assets/directo-4.png)
+
 #### DINOv2
 
 DINOv2 es un modelo **self-supervised** para aprendizaje de representaciones visuales, capaz de generar embeddings de alta calidad que permitirá **comparar productos y realizar análisis mediante clustering** de los objetos detectados.
 
 **Artículo original sobre DINOv2:** [**Oquab, M., Darcet, T., Moutakanni, T., Vo, H., Szafraniec, M. et al. (2023).** *DINOv2: Learning Robust Visual Features without Supervision.* In Transactions on Machine Learning Research (TMLR).*](https://arxiv.org/pdf/2304.07193)
 
-Para la generación de embeddings de los productos, se utilizó el modelo **CLIP DINOv2 ViT-L/14**
+Para la generación de embeddings de los productos, se utilizó el modelo **DINOv2 ViT-L/14**
 
 En este trabajo, los embeddings generados por DINOv2 se utilizan para representar cada producto detectado por YOLO, permitiendo aplicar técnicas de **clustering y comparación de similitud** entre productos, lo que facilita la agrupación automática y el análisis de inventario visual.
 
-Tememos una imagen de una seccion de un comercio:
+A continuación, se pone a prueba este enfoque en el mismo escenario descrito previamente, partiendo de las mismas detecciones iniciales obtenidas con YOLO:
 
-![base-cluster](assets/seccion-bebidas.jpg)
+![Resultados de detección](assets/seccion-bebidas-deteccion.jpg)
 
-Se procede a generar los embedings, clusterizaros usando HDBSCAN y visualizar usando PCA y UMAP para generar agrupaciones.
+Se procede a generar los embeddings de cada región de interés, los cuales se agrupan mediante **HDBSCAN** y se visualizan utilizando **PCA** y **UMAP** para explorar las agrupaciones obtenidas.
 
 ![Clusters](assets/clusters.png)
 
@@ -225,64 +268,137 @@ Esto tiene varias ventajas:
 
 Ahora, para la votación que determina la clasificación del producto, se exploraron dos alternativas posibles. Por un lado, se puede realizar la clasificación directamente con CLIP nuevamente. Por otro lado, se podría optar por un matching basado en embeddings, es decir, encontrar el producto más cercano mediante un nearest neighbor en el espacio de características.
 
+A continuación, se procede a extraer los **ROI más representativos** de cada cluster generado. En este ejemplo se seleccionan tres ROI por cluster como demostración, aunque el enfoque permite utilizar **n ROI**, asignando a cada uno un **peso normalizado** que refleje su importancia relativa dentro del cluster.
+
+![ROI 0](assets/roi-0.png)
+![ROI 1](assets/roi-1.png)
+![ROI 2](assets/roi-2.png)
+
+Este mismo procedimiento se aplica al resto de clusters identificados en la sección.
+
+---
+
+Cada ROI seleccionado se clasifica mediante el modelo **CLIP**. Posteriormente, se realiza una **votación ponderada** considerando los pesos asignados a cada ROI, y se asigna el **predicted label** correspondiente a todos los elementos que pertenecen al mismo cluster en la base de datos.
+
+![Predicción 1](assets/prediccion-1.png)
+![Predicción 2](assets/prediccion-2.png)
+![Predicción 3](assets/prediccion-3.png)
+![Predicción 4](assets/prediccion-4.png)
+![Predicción 5](assets/prediccion-5.png)
+![Predicción 6](assets/prediccion-6.png)
+
 ---
 
 ### Resultados Obtenidos
 
-Se ponen a prueba ambos enfoques sobre una serie de imagenes capturadas en diferentes secciones de un comercio.
+Se presenta la tabla de resultados obtenidos al aplicar la clasificación directa desde YOLO hasta LVM, mostrando el número de predicciones por clase, cuántas coincidieron con la etiqueta real y la precisión por clase. Esta tabla permite evaluar el efecto acumulado de los errores en las 3 etapas:
 
-- Detección de productos utilizando YOLO8v (detección).  
-- Detección de productos utilizando SAM3 (segmentación).
-- Reconocimiento del producto mediante **CLIP‑ViT‑B/32**.  
-- Generación de un **archivo CSV** con todas comparaciones.
+| Product              | Predicted Count| Predicted Correct | Real Count | Accuracy (%) |
+|----------------------|----------------|-----------------|------------|--------------|
+| coke diet            | 30             | 28               | 30         | 93.33%      |
+| coca cola red        | 84             | 84               | 93         | 90.32%       |
+| sprite               | 34             | 32               | 33         | 96.96%       |
+| dr pepper            | 20             | 10               | 10         | 50.00%       |
+| dr pepper diet       | 16             | 13               | 16         | 81.25%      |
+| dr pepper 23         | 21             | 21               | 30         | 70.00%       |
+| fanta                | 4              | 4                | 4          | 100.00%      |
+| coca cola black      | 16             | 14               | 16         | 87.50%      |
+| coca cola bottle     | 12             | 4                | 4          | 33.33%       |
 
-- **Imagenes originales:** [productos.mp4](https://drive.google.com/file/)  
-- **Imagenes procesadas (resultados):** [detecciones.mp4](https://drive.google.com/file/)
-- **Archivo CSV generado:** [out/reporte_final.csv](out/reporte_final.csv)
-
-El archivo `reporte_final.csv` incluye, para cada detección:  
-imagen fuente (seccion/camara), tipo de objeto (solo object), confianza, identificador de tracking, coordenadas de la caja delimitadora, producto reconocido, resultados lvm con sus respectivas confianzas.
+La **precisión media** obtenida para este pipeline directo es de **78.08%**.
 
 ---
 
-### Ánalisis de resutados y comparativa de las distintas metodologías.
+A continuación, se muestra una tabla comparativa que refleja los resultados acumulados considerando todos los pasos del pipeline: detecciones iniciales, clusterización de ROI y clasificación mediante CLIP. Esta tabla permite evaluar el efecto acumulado de los errores en las 3 etapas:
 
-Se evaluaron dos métodos de reconocimiento de texto:
+| Product              | Predicted Count | Predicted Correct | Real Count | Accuracy (%) |
+|----------------------|-----------------|-------------------|------------|--------------|
+| coke diet            | 29              | 29                | 30         | 96.67%       |
+| coca cola red        | 88              | 88                | 93         | 94.62%       |
+| sprite               | 27              | 27                | 33         | 81.82%       |
+| dr pepper            | 9               | 8                 | 10         | 80.00%       |
+| dr pepper diet       | 16              | 16                | 16         | 100.00%      |
+| dr pepper 23         | 24              | 24                | 30         | 80.00%       |
+| fanta                | 4               | 4                 | 4          | 100.00%      |
+| coca cola black      | 12              | 12                | 16         | 75.00%       |
+| coca cola bottle     | 4               | 4                 | 4          | 100.00%      |
 
-| Tipo de Métrica       | Descripción                                                    | YOLO             | SAM + LVM         |
-|-----------------------|----------------------------------------------------------------|------------------|-------------------|
-| **Total de Muestras** | Número de imagenes evaluadas                                   | **31**           | **31**            |
-| **Deteccion Exacta**  | La cantidad predicha coincide exactamente con la cantidad real | **xx.x% (x/31)** | **xx.xx% (x/31)** |
-| **Deteccion Parcial** | Porcentaje de deteccion sobre la cantidad real.                | **xx.xx%**       | **xx.xx%**        |
 
+La **precisión media** para el pipeline completo se incrementa a **89.79%**, reflejando la mejora obtenida al integrar la clusterización y la votación ponderada en la clasificación de los ROI.
 
-**Datos de evaluacion:** [Descargar desde Google Drive]()
+No se observaron diferencias significativas entre ViT-B/32 y ViT-L/14, lo cual sugiere que en este problema la complejidad del modelo encargado de zero-shot no es el factor limitante. Las principales fuentes de error provienen de la calidad de los ROIs, la similitud visual entre productos y las limitaciones del pipeline de clustering y clasificación, por lo que un modelo base resulta suficiente.
 
-**Conclusiones:**
+---
+
+#### Generacion de dashboards visuales
+
+A partir de los datos obtenidos, es posible generar **gráficos visuales** que permiten observar la evolución del stock de los productos a lo largo del tiempo, así como estimar cuándo se agotarán.
+
+Por ejemplo, para esta sección de un comercio se registraron varias imágenes que muestran la evolución del inventario y la disposición de los productos en distintos momentos:
+
+![momento-1](assets/momento-1.png)
+
+| fiesta stawberry | fiesta lime | fiesta cola | fiesta root beer | fiesta orange | fiesta grape | island sun peaches | timestamp |
+|-----------------|------------|------------|-----------------|---------------|--------------|------------------|----------------------------|
+| 20              | 27         | 24         | 27              | 23            | 24           | 79               | 2026-01-13 05:24:38.359674 |
+| 17              | 23         | 20         | 22              | 19            | 19           | 71               | 2026-01-13 11:24:38.359674 |
+| 15              | 19         | 18         | 18              | 16            | 16           | 62               | 2026-01-13 17:24:38.359674 |
+| 12              | 15         | 15         | 15              | 14            | 14           | 54               | 2026-01-13 23:24:38.359674 |
+| 10              | 13         | 13         | 13              | 11            | 11           | 49               | 2026-01-14 05:24:38.359674 |
+
+La siguiente figura muestra la comparación del stock de productos en **dos instantes diferentes**:
+
+![Comparación entre dos momentos](assets/grafica-comparacion.png)
+
+---
+
+Se calcula el **cambio neto** de cada producto entre los dos momentos, destacando cuáles han disminuido más rápidamente:
+
+![Cambio neto](assets/grafica-cambio.png)
+
+---
+
+El siguiente gráfico representa la **evolución del inventario a lo largo del tiempo**, mostrando cómo varían las cantidades disponibles en cada snapshot registrado:
+
+![Evolución temporal](assets/grafica-tiempo.png)
+
+---
+
+A partir de la tendencia de disminución, se generan predicciones sobre **cuándo ciertos productos podrían agotarse**:
+
+![Predicción 1](assets/grafica-prediccion-1.png)
+![Predicción 2](assets/grafica-prediccion-2.png)
+![Predicción 3](assets/grafica-prediccion-3.png)
 
 ---
 
 ## Conclusiones finales
 
+En este proyecto se desarrolló un pipeline completo para la clasificación automática de productos a partir de ROIs, combinando clustering por embeddings y clasificación semántica mediante CLIP. El uso de ROIs representativos y votación ponderada por cluster permitió reducir el ruido y mejorar la estabilidad de las predicciones frente a la clasificación individual. Los resultados muestran una alta precisión en la mayoría de las categorías, aunque persisten errores en clases visualmente similares. Finalmente, se exploraron alternativas basadas en matching por embeddings, que abren la puerta a sistemas más eficientes y escalables sin necesidad de reclasificar con modelos pesados en cada iteración.
+
+Asimismo, aunque se exploró el uso de modelos de segmentación como SAM, se concluyó que este tipo de enfoques no resulta práctico en estanterías comerciales debido a la alta similitud visual entre productos, la complejidad del posprocesamiento de máscaras y la escasa disponibilidad de datasets con anotaciones de segmentación.
+
+En conjunto, los resultados muestran que el uso de embeddings y estrategias de agregación por cluster constituye una solución eficaz y escalable para este tipo de escenarios.
+
 ---
 
 ### Propuestas de ampliación
 
-- Desarrollo de aplicacion full-stack que integre todo y aporte una UI.  
-- Integración con **LLM's** para generar reportes automáticos y alertas detalladas.    
-- Modularización y mejora de la calidad del código.
+- Desarrollo de una suite de tests automatizados que permita validar el funcionamiento del sistema de forma sistemática y reproducible.  
+- Implementación de una aplicación full-stack que integre todo el pipeline y proporcione una interfaz de usuario para facilitar su uso y análisis de resultados.  
+- Optimización de los algoritmos implementados para mejorar el rendimiento computacional y reducir los tiempos de procesamiento.  
+- Refactorización, modularización y mejora general de la calidad del código para facilitar su mantenimiento y escalabilidad futura.  
 
 ---
 
 ## Fuentes y tecnologías utilizadas
 
-- **YOLOv8 y YOLOv11**: para detección de objetos en imágenes y vídeo, adaptado al dataset SKU110K.  
-- **SAM2 y SAM3 (Segment Anything Model)**: para segmentación automática de productos en estanterías.  
+- **YOLO**: para detección de objetos en imágenes y vídeo, adaptado al dataset SKU110K.  
+- **SAM (Segment Anything Model)**: para segmentación automática de productos en estanterías.  
 - **OpenCLIP (ViT-B/32 y ViT-L/14)**: para reconocimiento y clasificación zero-shot de productos mediante embeddings multimodales.  
 - **DINOv2 y DINOv3**: para extracción de características visuales y análisis de similitudes entre productos.  
 - **DBSCAN, PCA y UMAP**: para agrupamiento automático de productos según sus embeddings visuales.  
 - **PyTorch, OpenCV, scikit-learn y Ultralytics**: frameworks y librerías para entrenamiento, procesamiento de imágenes y visualización de resultados.
-
 
 ---
 
