@@ -162,10 +162,10 @@ TODO: PENDIENTE REDACTAR
 
 El siguiente desafío consiste en **clasificar cada uno de los productos detectados**. Para ello, se plantean dos enfoques:
 
-1. **Clasificación zero-shot mediante un modelo multimodal (CLIP):**  
+1. **Clasificación directa del ROI con zero-shot pop un modelo multimodal (CLIP):**  
    Este enfoque permite asignar etiquetas a los productos sin necesidad de un entrenamiento específico para cada categoría, aprovechando la capacidad del modelo de relacionar imágenes y texto de manera directa.
 
-2. **Comparación de embeddings generados por modelos self-supervised (DINOv2):**  
+2. **Extraccion de features mediante embeddings generados por modelos self-supervised (DINOv2):**  
    Este método consiste en representar cada producto mediante un embedding visual y comparar estas representaciones entre sí, permitiendo agrupar o identificar productos similares basándose en su similitud en el espacio de características aprendido.
 
 #### OpenCLIP (LAION-2B)
@@ -186,7 +186,44 @@ DINOv2 es un modelo **self-supervised** para aprendizaje de representaciones vis
 
 **Artículo original sobre DINOv2:** [**Oquab, M., Darcet, T., Moutakanni, T., Vo, H., Szafraniec, M. et al. (2023).** *DINOv2: Learning Robust Visual Features without Supervision.* In Transactions on Machine Learning Research (TMLR).*](https://arxiv.org/pdf/2304.07193)
 
+Para la generación de embeddings de los productos, se utilizó el modelo **CLIP DINOv2 ViT-L/14**
+
 En este trabajo, los embeddings generados por DINOv2 se utilizan para representar cada producto detectado por YOLO, permitiendo aplicar técnicas de **clustering y comparación de similitud** entre productos, lo que facilita la agrupación automática y el análisis de inventario visual.
+
+Tememos una imagen de una seccion de un comercio:
+
+![base-cluster](assets/seccion-bebidas.jpg)
+
+Se procede a generar los embedings, clusterizaros usando HDBSCAN y visualizar usando PCA y UMAP para generar agrupaciones.
+
+![Clusters](assets/clusters.png)
+
+Luego de que se hayan generado estos embedings se procede a clusterizar:
+
+![Cluster 0](assets/cluster-0.png)
+![cluster 1](assets/cluster-1.png)
+![cluster 2](assets/cluster-2.png)
+![cluster 3](assets/cluster-3.png)
+![cluster 4](assets/cluster-4.png)
+![cluster 5](assets/cluster-5.png)
+![cluster 6](assets/cluster-6.png)
+![cluster 7](assets/cluster-7.png)
+![cluster 8](assets/cluster-8.png)
+![cluster 9](assets/cluster-9.png)
+![cluster 10](assets/cluster-10.png)
+![cluster 11](assets/cluster-11.png)
+
+A diferencia del enfoque anterior, en el que se procesaba cada ROI individual y se asignaban las etiquetas directamente. En este enfoque se extraen los ROI's mas representativos de cada cluster, esto se realiza sacando dentro de un cluster los embedins mas cercanos al centroide del mismo, se procede a clasificarlos y elegir la categoria mediante un votación ponderada conjunta.
+
+Este método permite asignar etiquetas de forma más confiable, ya que se consideran los elementos centrales del cluster y se evita que ROIs difíciles de clasificar reciban etiquetas incorrectas.
+
+Esto tiene varias ventajas:
+
+1. **Ahorro de recursos:** solo es necesario procesar los elementos representativos del cluster, en lugar de cada ROI individual.
+
+2. **Mayor robustez:** al usar una votación múltiple, los ROIs más difíciles de clasificar (por ejemplo, los con embeddings ambiguos) tienen más probabilidades de recibir la etiqueta correcta.
+
+Ahora, para la votación que determina la clasificación del producto, se exploraron dos alternativas posibles. Por un lado, se puede realizar la clasificación directamente con CLIP nuevamente. Por otro lado, se podría optar por un matching basado en embeddings, es decir, encontrar el producto más cercano mediante un nearest neighbor en el espacio de características.
 
 ---
 
@@ -233,6 +270,7 @@ Se evaluaron dos métodos de reconocimiento de texto:
 
 - Desarrollo de aplicacion full-stack que integre todo y aporte una UI.  
 - Integración con **LLM's** para generar reportes automáticos y alertas detalladas.    
+- Modularización y mejora de la calidad del código.
 
 ---
 
@@ -242,7 +280,7 @@ Se evaluaron dos métodos de reconocimiento de texto:
 - **SAM2 y SAM3 (Segment Anything Model)**: para segmentación automática de productos en estanterías.  
 - **OpenCLIP (ViT-B/32 y ViT-L/14)**: para reconocimiento y clasificación zero-shot de productos mediante embeddings multimodales.  
 - **DINOv2 y DINOv3**: para extracción de características visuales y análisis de similitudes entre productos.  
-- **K-Means, DBSCAN, PCA y UMAP**: para agrupamiento automático de productos según sus embeddings visuales.  
+- **DBSCAN, PCA y UMAP**: para agrupamiento automático de productos según sus embeddings visuales.  
 - **PyTorch, OpenCV, scikit-learn y Ultralytics**: frameworks y librerías para entrenamiento, procesamiento de imágenes y visualización de resultados.
 
 
