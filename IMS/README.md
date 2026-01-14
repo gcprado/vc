@@ -166,8 +166,8 @@ Motion blur:
 
 Inicialmente se consideró el uso de **modelos de segmentación**, en particular **SAM** (Segment Anything Model), como alternativa para la detección de productos en estanterías. Sin embargo, este enfoque resultó poco adecuado para el escenario planteado.
 
-![alt text](image.png)
-![alt text](image-1.png)
+![segmentacion 1](assets/segmentacion-1.png)
+![segmentacion 2](assets/segmentacion-2.png)
 
 En entornos **densamente poblados**, como los estantes de retail, los modelos de segmentación tienden a presentar dificultades importantes: Estos modelos funcionan mejor en escenas donde los objetos a segmentar son **semánticamente distintos** del fondo, mientras que en estanterías comerciales existe una gran cantidad de productos **visualmente muy similares entre sí**, lo que dificulta separar correctamente **cada instancia del fondo** y de los **objetos vecinos**.  
 
