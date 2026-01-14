@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/portada.png" alt="Portada del proyecto" width="700"/>
+  <img src="assets/portada.png" alt="Portada del proyecto" width="1024"/>
 </p>
 
 ## Motivación
