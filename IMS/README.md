@@ -4,17 +4,17 @@
 
 ## Motivación
 
-La gestión de inventarios en entornos comerciales y logísticos modernos representa un desafío cada vez más complejo debido al alto volumen y diversidad de productos, la necesidad de mantener información actualizada en tiempo real y la reducción de errores humanos en los procesos de control de stock. Tradicionalmente, estas tareas se han realizado de forma manual o semiautomática, lo que conlleva costes elevados, falta de escalabilidad y una alta probabilidad de inconsistencias en los datos.
+La gestión de inventarios en **entornos comerciales y logísticos** modernos representa un desafío cada vez más complejo debido al **alto volumen y diversidad de productos**, la necesidad de mantener información actualizada en **tiempo real** y la reducción de errores humanos en los procesos de control de stock. Tradicionalmente, estas tareas se han realizado de **forma manual** o semiautomática, lo que conlleva costes elevados, falta de escalabilidad y una alta probabilidad de inconsistencias en los datos.
 
-En los últimos años, los avances en visión por computador y aprendizaje profundo han demostrado un gran potencial para automatizar tareas de percepción visual como la detección, segmentación y reconocimiento de objetos. Modelos del estado del arte como YOLO, Segment Anything o CLIP permiten hoy en día abordar problemas que hasta hace poco requerían intervención humana directa.
+En los últimos años, los avances en **visión por computador** y **aprendizaje profundo** han demostrado un gran potencial para **automatizar tareas** de percepción visual como la detección, segmentación y reconocimiento de objetos. **Modelos del estado del arte** como permiten abordar problemas que hasta hace poco requerían **intervención humana directa**.
 
-Este trabajo surge de la motivación de explorar y aplicar estas tecnologías en un problema realista y de alto impacto práctico: la automatización del conteo y la gestión de inventario mediante sistemas de visión artificial. Además, se busca no solo implementar una solución funcional, sino también analizar, comparar y comprender las fortalezas y limitaciones de los distintos enfoques existentes, evaluando su viabilidad en escenarios reales de uso.
+Este trabajo surge de la motivación de explorar y **aplicar estas tecnologías** en un problema realista y de alto impacto práctico: la **automatización del conteo y la gestión de inventario mediante sistemas de visión artificial**. Además, se busca no solo implementar una solución funcional, sino también analizar, comparar y comprender las fortalezas y limitaciones de los distintos enfoques existentes, evaluando su viabilidad en escenarios reales de uso.
 
 ## Objetivos del Trabajo
 
 ### Objetivo General
 
-Desarrollar y evaluar un sistema basado en visión por computador capaz de contar productos en estanterías, con el fin de automatizar tareas de control y gestión de inventario en entornos comerciales o logísticos.
+Desarrollar y evaluar un sistema basado en visión por computador **capaz de contar y clasificar productos en estanterías**, con el fin de automatizar tareas de control y gestión de inventario en entornos comerciales o logísticos.
 
 ### Objetivos Específicos
 
@@ -41,7 +41,7 @@ De este modo, el primer paso del pipeline consiste en realizar la detección de 
 ### Dataset y Entrenamiento del Modelo
 
 #### Dataset SKU110K
-El dataset SKU110K es un conjunto de imágenes de estanterías comerciales con alta densidad de productos, desarrollado para tareas de detección y conteo de objetos en entornos de retail. Contiene más de 11,000 imágenes y alrededor de 400,000 instancias de productos, etiquetadas mediante bounding boxes. Las imágenes incluyen múltiples desafíos típicos de inventario real, como superposición de productos, variaciones de iluminación, perspectivas diferentes, y oclusiones parciales, lo que lo convierte en un dataset adecuado para evaluar modelos de detección y segmentación en entornos logísticos.
+El dataset **SKU110K** es un conjunto de imágenes de **estanterías comerciales** con **alta densidad de productos**, desarrollado para tareas de detección y conteo de objetos en entornos de retail. Contiene más de **11,000 imágenes** y alrededor de **400,000 instancias de productos**, etiquetadas mediante bounding boxes. Las imágenes incluyen múltiples desafíos típicos de inventario real, como superposición de productos, variaciones de iluminación, perspectivas diferentes, y oclusiones parciales, lo que lo convierte en un dataset adecuado para evaluar modelos de detección y segmentación en entornos logísticos.
 
 El dataset SKU110K se organizó siguiendo la estructura estándar de YOLO:
 
@@ -87,7 +87,6 @@ A continuación se incluyen los enlaces a las principales métricas visuales:
 | Precision vs Recall | ![BoxPR_curve](yolov8_train_results/content/runs/detect/train/BoxPR_curve.png) |
 | Recall vs Confidence | ![BoxR_curve](yolov8_train_results/content/runs/detect/train/BoxR_curve.png) |
 | Confusion Matrix | ![confusion_matrix](yolov8_train_results/content/runs/detect/train/confusion_matrix.png) |
-| Confusion Matrix (Normalized) | ![confusion_matrix_normalized](yolov8_train_results/content/runs/detect/train/confusion_matrix_normalized.png) |
 | Labels | ![labels](yolov8_train_results/content/runs/detect/train/labels.jpg) |
 | Other metrics | ![results](yolov8_train_results/content/runs/detect/train/results.png) |
 
@@ -165,17 +164,14 @@ Motion blur:
 
 ### Utilizacion de SAM para la realizacion de deteccionoes
 
-Te lo dejo ya **redactado en estilo de informe** y bien estructurado:
+Inicialmente se consideró el uso de **modelos de segmentación**, en particular **SAM** (Segment Anything Model), como alternativa para la detección de productos en estanterías. Sin embargo, este enfoque resultó poco adecuado para el escenario planteado.
 
----
+![alt text](image.png)
+![alt text](image-1.png)
 
-### Utilización de SAM para la realización de detecciones
+En entornos **densamente poblados**, como los estantes de retail, los modelos de segmentación tienden a presentar dificultades importantes: Estos modelos funcionan mejor en escenas donde los objetos a segmentar son **semánticamente distintos** del fondo, mientras que en estanterías comerciales existe una gran cantidad de productos **visualmente muy similares entre sí**, lo que dificulta separar correctamente **cada instancia del fondo** y de los **objetos vecinos**.  
 
-Inicialmente se consideró el uso de modelos de segmentación, en particular SAM (Segment Anything Model), como alternativa para la detección de productos en estanterías. Sin embargo, este enfoque resultó poco adecuado para el escenario planteado.
-
-En entornos densamente poblados, como los estantes de retail, los modelos de segmentación tienden a presentar dificultades importantes: las regiones de interés obtenidas suelen tener formas irregulares y fragmentadas, lo que complica considerablemente su posterior posprocesamiento y su integración con otros modelos del pipeline. Además, estos modelos funcionan mejor en escenas donde los objetos a segmentar son semánticamente distintos del fondo, mientras que en estanterías comerciales existe una gran cantidad de productos visualmente muy similares entre sí, lo que dificulta separar correctamente cada instancia del fondo y de los objetos vecinos.
-
-Por último, el entrenamiento o ajuste fino de modelos de segmentación requiere anotaciones en forma de máscaras, que son mucho menos comunes y más costosas de producir que las anotaciones mediante *bounding boxes*. Esto limita la disponibilidad de conjuntos de datos adecuados y hace que este enfoque sea menos práctico en comparación con métodos basados en detección por cajas delimitadoras.
+Por último, el **entrenamiento** o ajuste fino de modelos de segmentación requiere **anotaciones en forma de máscaras**, que son mucho menos comunes y más costosas de producir que las anotaciones mediante *bounding boxes*. Esto limita la disponibilidad de conjuntos de datos adecuados y hace que este enfoque sea menos práctico en comparación con métodos basados en detección por cajas delimitadoras.
 
 ---
 
@@ -184,10 +180,10 @@ Por último, el entrenamiento o ajuste fino de modelos de segmentación requiere
 El siguiente desafío consiste en **clasificar cada uno de los productos detectados**. Para ello, se plantean dos enfoques:
 
 1. **Clasificación directa del ROI con zero-shot por un modelo multimodal (CLIP):**  
-   Este enfoque permite asignar etiquetas a los productos sin necesidad de un entrenamiento específico para cada categoría, aprovechando la capacidad del modelo de relacionar imágenes y texto de manera directa.
+   Este enfoque permite **asignar etiquetas** a los productos sin necesidad de un **entrenamiento específico** para cada categoría, aprovechando la capacidad del modelo de relacionar imágenes y texto de manera directa.
 
 2. **Extraccion de features mediante embeddings generados por modelos self-supervised (DINOv2):**  
-   Este método consiste en representar cada producto mediante un embedding visual y comparar estas representaciones entre sí, permitiendo agrupar o identificar productos similares basándose en su similitud en el espacio de características aprendido.
+   Este método consiste en representar cada producto mediante un **embedding visual** y comparar estas representaciones entre sí, permitiendo agrupar o identificar productos similares basándose en su similitud en el espacio de características aprendido.
 
 #### OpenCLIP (LAION-2B)
 
@@ -225,7 +221,7 @@ Cada región de interés identificada se envió al modelo CLIP para su clasifica
 
 #### DINOv2
 
-DINOv2 es un modelo **self-supervised** para aprendizaje de representaciones visuales, capaz de generar embeddings de alta calidad que permitirá **comparar productos y realizar análisis mediante clustering** de los objetos detectados.
+DINOv2 es un modelo **self-supervised** para aprendizaje de representaciones visuales, capaz de **generar embeddings** de alta calidad que permitirá **comparar productos y realizar análisis mediante clustering** de los objetos detectados.
 
 **Artículo original sobre DINOv2:** [**Oquab, M., Darcet, T., Moutakanni, T., Vo, H., Szafraniec, M. et al. (2023).** *DINOv2: Learning Robust Visual Features without Supervision.* In Transactions on Machine Learning Research (TMLR).*](https://arxiv.org/pdf/2304.07193)
 
@@ -256,9 +252,9 @@ Luego de que se hayan generado estos embedings se procede a clusterizar:
 ![cluster 10](assets/cluster-10.png)
 ![cluster 11](assets/cluster-11.png)
 
-A diferencia del enfoque anterior, en el que se procesaba cada ROI individual y se asignaban las etiquetas directamente. En este enfoque se extraen los ROI's mas representativos de cada cluster, esto se realiza sacando dentro de un cluster los embedins mas cercanos al centroide del mismo, se procede a clasificarlos y elegir la categoria mediante un votación ponderada conjunta.
+A diferencia del enfoque anterior, en el que se procesaba cada ROI individual y se asignaban las etiquetas directamente. En este enfoque se extraen los **ROI's mas representativos de cada cluster**, esto se realiza sacando dentro de un cluster los **embeddings mas cercanos al centroide del mismo**, se procede a clasificarlos y elegir la categoria mediante un votación ponderada conjunta.
 
-Este método permite asignar etiquetas de forma más confiable, ya que se consideran los elementos centrales del cluster y se evita que ROIs difíciles de clasificar reciban etiquetas incorrectas.
+Este método permite asignar etiquetas de forma **más confiable**, ya que se consideran los **elementos centrales** del cluster y se evita que **ROIs difíciles de clasificar** por CLIP reciban etiquetas incorrectas.
 
 Esto tiene varias ventajas:
 
@@ -266,7 +262,7 @@ Esto tiene varias ventajas:
 
 2. **Mayor robustez:** al usar una votación múltiple, los ROIs más difíciles de clasificar (por ejemplo, los con embeddings ambiguos) tienen más probabilidades de recibir la etiqueta correcta.
 
-Ahora, para la votación que determina la clasificación del producto, se exploraron dos alternativas posibles. Por un lado, se puede realizar la clasificación directamente con CLIP nuevamente. Por otro lado, se podría optar por un matching basado en embeddings, es decir, encontrar el producto más cercano mediante un nearest neighbor en el espacio de características.
+Ahora, para la votación que determina la clasificación del producto, se exploraron **dos alternativas** posibles. Por un lado, se puede realizar la clasificación directamente con **CLIP nuevamente**. O por otro lado, se podría optar por un **matching basado en embeddings**, es decir, encontrar el producto más cercano mediante un **nearest neighbor** en el **espacio de características**.
 
 A continuación, se procede a extraer los **ROI más representativos** de cada cluster generado. En este ejemplo se seleccionan tres ROI por cluster como demostración, aunque el enfoque permite utilizar **n ROI**, asignando a cada uno un **peso normalizado** que refleje su importancia relativa dentro del cluster.
 
@@ -291,7 +287,7 @@ Cada ROI seleccionado se clasifica mediante el modelo **CLIP**. Posteriormente, 
 
 ### Resultados Obtenidos
 
-Se presenta la tabla de resultados obtenidos al aplicar la clasificación directa desde YOLO hasta LVM, mostrando el número de predicciones por clase, cuántas coincidieron con la etiqueta real y la precisión por clase. Esta tabla permite evaluar el efecto acumulado de los errores en las 3 etapas:
+Se presenta la tabla de resultados obtenidos al aplicar la **clasificación directa** desde YOLO hasta LVM, mostrando el número de predicciones por clase, cuántas coincidieron con la etiqueta real y la precisión por clase. Esta tabla permite evaluar el efecto acumulado de los errores en las 3 etapas:
 
 | Product              | Predicted Count| Predicted Correct | Real Count | Accuracy (%) |
 |----------------------|----------------|-----------------|------------|--------------|
@@ -309,7 +305,7 @@ La **precisión media** obtenida para este pipeline directo es de **78.08%**.
 
 ---
 
-A continuación, se muestra una tabla comparativa que refleja los resultados acumulados considerando todos los pasos del pipeline: detecciones iniciales, clusterización de ROI y clasificación mediante CLIP. Esta tabla permite evaluar el efecto acumulado de los errores en las 3 etapas:
+A continuación, se muestra una tabla comparativa que refleja los resultados acumulados considerando todos los pasos del pipeline: detecciones iniciales, clusterización de ROI y clasificación mediante CLIP. Esta tabla permite evaluar el efecto acumulado de los **errores en las 3 etapas**:
 
 | Product              | Predicted Count | Predicted Correct | Real Count | Accuracy (%) |
 |----------------------|-----------------|-------------------|------------|--------------|
@@ -326,7 +322,9 @@ A continuación, se muestra una tabla comparativa que refleja los resultados acu
 
 La **precisión media** para el pipeline completo se incrementa a **89.79%**, reflejando la mejora obtenida al integrar la clusterización y la votación ponderada en la clasificación de los ROI.
 
-No se observaron diferencias significativas entre ViT-B/32 y ViT-L/14, lo cual sugiere que en este problema la complejidad del modelo encargado de zero-shot no es el factor limitante. Las principales fuentes de error provienen de la calidad de los ROIs, la similitud visual entre productos y las limitaciones del pipeline de clustering y clasificación, por lo que un modelo base resulta suficiente.
+No se observaron diferencias significativas entre **ViT-B/32 y ViT-L/14**, lo cual sugiere que en este problema la complejidad del modelo encargado de zero-shot no es el factor limitante. Las principales fuentes de error provienen de la calidad de los ROIs, la similitud visual entre productos y las limitaciones en las detecciónes y clustering, por lo que un modelo base resulta suficiente.
+
+![ruido](assets/ruido.png)
 
 ---
 
@@ -384,6 +382,8 @@ En conjunto, los resultados muestran que el uso de embeddings y estrategias de a
 
 ### Propuestas de ampliación
 
+- Extracción de etiquetas para zero-shot mediante modulo de OCR o LLM
+- Comparacion directa base de datos de embeddings y FAISS
 - Desarrollo de una suite de tests automatizados que permita validar el funcionamiento del sistema de forma sistemática y reproducible.  
 - Implementación de una aplicación full-stack que integre todo el pipeline y proporcione una interfaz de usuario para facilitar su uso y análisis de resultados.  
 - Optimización de los algoritmos implementados para mejorar el rendimiento computacional y reducir los tiempos de procesamiento.  
