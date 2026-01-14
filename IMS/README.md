@@ -382,8 +382,8 @@ En conjunto, los resultados muestran que el uso de embeddings y estrategias de a
 
 ### Propuestas de ampliación
 
-- Extracción de etiquetas para zero-shot mediante modulo de OCR o LLM
-- Comparacion directa base de datos de embeddings y FAISS
+- Extracción de etiquetas para zero-shot mediante módulo de OCR o LLM
+- Comparación directa con base de datos de embeddings y FAISS para busqueda
 - Desarrollo de una suite de tests automatizados que permita validar el funcionamiento del sistema de forma sistemática y reproducible.  
 - Implementación de una aplicación full-stack que integre todo el pipeline y proporcione una interfaz de usuario para facilitar su uso y análisis de resultados.  
 - Optimización de los algoritmos implementados para mejorar el rendimiento computacional y reducir los tiempos de procesamiento.  
