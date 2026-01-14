@@ -402,12 +402,12 @@ En conjunto, los resultados muestran que el uso de **embeddings y estrategias de
 
 ## Fuentes y tecnologías utilizadas
 
-- **YOLO**: para detección de objetos en imágenes y vídeo, adaptado al dataset SKU110K.  
-- **SAM (Segment Anything Model)**: para segmentación automática de productos en estanterías.  
-- **OpenCLIP (ViT-B/32 y ViT-L/14)**: para reconocimiento y clasificación zero-shot de productos mediante embeddings multimodales.  
-- **DINOv2 y DINOv3**: para extracción de características visuales y análisis de similitudes entre productos.  
+- **[YOLO](https://docs.ultralytics.com/models/yolov8/)**: para detección de objetos en imágenes y vídeo, adaptado al dataset SKU110K.  
+- **[SAM (Segment Anything Model)](https://ai.meta.com/sam3/)**: para segmentación automática de productos en estanterías.  
+- **[OpenCLIP (ViT-B/32 y ViT-L/14)](https://huggingface.co/collections/laion/openclip-laion-2b)**: para reconocimiento y clasificación zero-shot de productos mediante embeddings multimodales.  
+- **[DINOv2](https://arxiv.org/abs/2304.07193)**: para extracción de características visuales y análisis de similitudes entre productos.  
 - **DBSCAN, PCA y UMAP**: para agrupamiento automático de productos según sus embeddings visuales.  
-- **PyTorch, OpenCV, scikit-learn y Ultralytics**: frameworks y librerías para entrenamiento, procesamiento de imágenes y visualización de resultados.
+- **[PyTorch](https://pytorch.org/), [OpenCV](https://opencv.org/), scikit-learn y [Ultralytics](https://www.ultralytics.com/)**: frameworks y librerías para entrenamiento, procesamiento de imágenes y visualización de resultados.
 
 ---
 
